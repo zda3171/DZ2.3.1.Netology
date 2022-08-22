@@ -27,7 +27,7 @@ public class DataGenerator {
     }
 
     public static String generateCity(String locale) {
-        $("[data-test-id=city] input").setValue("ва");
+        $("[data-test-id=city] input").setValue("Бар");
         ElementsCollection cities = $$(".menu-item__control");
         List<String> towns = new ArrayList<>();
         for (SelenideElement element : cities) {
@@ -47,7 +47,7 @@ public class DataGenerator {
 
     public static String generatePhone(String locale) {
         Faker faker = new Faker(new Locale(locale));
-        String phone = faker.phoneNumber().phoneNumber();
+        String phone = faker.numerify("+7##########");
         return phone;
     }
 
