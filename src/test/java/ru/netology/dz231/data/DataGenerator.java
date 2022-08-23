@@ -27,21 +27,14 @@ public class DataGenerator {
     }
 
     public static String generateCity(String locale) {
-        $("[data-test-id=city] input").setValue("Бар");
-        ElementsCollection cities = $$(".menu-item__control");
-        List<String> towns = new ArrayList<>();
-        for (SelenideElement element : cities) {
-            towns.add(element.getText());
-        }
-        $("[data-test-id=city] input").doubleClick().sendKeys(Keys.BACK_SPACE);
-        Random random = new Random();
-        String city = towns.get(random.nextInt(towns.size() - 1));
+        Faker faker = new Faker(new Locale(locale));
+        String city = faker.address().city();
         return city;
     }
 
     public static String generateName(String locale) {
         Faker faker = new Faker(new Locale(locale));
-        String name = faker.name().fullName();
+        String name = faker.name().name();
         return name;
     }
 
