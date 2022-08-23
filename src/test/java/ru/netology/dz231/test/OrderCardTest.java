@@ -2,6 +2,7 @@ package ru.netology.dz231.test;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.SelenideElement;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,17 +34,35 @@ public class OrderCardTest {
         var firstMeetingDate = DataGenerator.generateDate(daysToAddForFirstMeeting);
         var daysToAddForSecondMeeting = 7;
         var secondMeetingDate = DataGenerator.generateDate(daysToAddForSecondMeeting);
-        // TODO: добавить логику теста в рамках которого будет выполнено планирование и перепланирование встречи.
-        // Для заполнения полей формы можно использовать пользователя validUser и строки с датами в переменных
-        // firstMeetingDate и secondMeetingDate. Можно также вызывать методы generateCity(locale),
-        // generateName(locale), generatePhone(locale) для генерации и получения в тесте соответственно города,
-        // имени и номера телефона без создания пользователя в методе generateUser(String locale) в датагенераторе
         $("[data-test-id=city] input").setValue(validUser.getCity());
         $("[data-test-id='date'] input").doubleClick().sendKeys(firstMeetingDate);
         $("[data-test-id=name] input").setValue(validUser.getName());
         $("[data-test-id=phone] input").setValue(validUser.getPhone());
         $("[data-test-id=agreement]").click();
         $("[type=button] .button__text").click();
+        SelenideElement cityError = $("[data-test-id=\"city\"].input_invalid .input__sub");
+        boolean isNotCorrect = cityError.isDisplayed();
+        while (true) {
+            if (isNotCorrect) {
+                $("[data-test-id=city] input").doubleClick().sendKeys(Keys.DELETE);
+                $("[data-test-id=city] input").val(DataGenerator.generateCity("ru"));
+                $("[type=button] .button__text").click();
+
+            }
+            break;
+        }
+        SelenideElement nameError = $("[data-test-id=name] input.input__control");
+        boolean isNotCorrectName = nameError.isDisplayed();
+        while (true) {
+            if (isNotCorrectName) {
+                $("[data-test-id=name] input.input__control")
+                        .doubleClick().sendKeys(Keys.chord(Keys.CONTROL, "a") + Keys.BACK_SPACE);
+                $("[data-test-id=name] input.input__control").val(DataGenerator.generateName("ru"));
+                $("[type=button] .button__text").click();
+
+            }
+            break;
+        }
         $(".notification__title").shouldBe(Condition.visible, Duration.ofSeconds(15));
         $("[data-test-id=success-notification] .notification__content").should(Condition.exactText("Встреча успешно запланирована на " + firstMeetingDate));
         $("[placeholder=\"Дата встречи\"]").doubleClick().sendKeys(secondMeetingDate);
