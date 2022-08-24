@@ -40,29 +40,6 @@ public class OrderCardTest {
         $("[data-test-id=phone] input").setValue(validUser.getPhone());
         $("[data-test-id=agreement]").click();
         $("[type=button] .button__text").click();
-        SelenideElement cityError = $("[data-test-id=\"city\"].input_invalid .input__sub");
-        boolean isNotCorrect = cityError.isDisplayed();
-        while (true) {
-            if (isNotCorrect) {
-                $("[data-test-id=city] input").doubleClick().sendKeys(Keys.DELETE);
-                $("[data-test-id=city] input").val(DataGenerator.generateCity("ru"));
-                $("[type=button] .button__text").click();
-
-            }
-            break;
-        }
-        SelenideElement nameError = $("[data-test-id=name] input.input__control");
-        boolean isNotCorrectName = nameError.isDisplayed();
-        while (true) {
-            if (isNotCorrectName) {
-                $("[data-test-id=name] input.input__control")
-                        .doubleClick().sendKeys(Keys.chord(Keys.CONTROL, "a") + Keys.BACK_SPACE);
-                $("[data-test-id=name] input.input__control").val(DataGenerator.generateName("ru"));
-                $("[type=button] .button__text").click();
-
-            }
-            break;
-        }
         $(".notification__title").shouldBe(Condition.visible, Duration.ofSeconds(15));
         $("[data-test-id=success-notification] .notification__content").should(Condition.exactText("Встреча успешно запланирована на " + firstMeetingDate));
         $("[placeholder=\"Дата встречи\"]").doubleClick().sendKeys(secondMeetingDate);
